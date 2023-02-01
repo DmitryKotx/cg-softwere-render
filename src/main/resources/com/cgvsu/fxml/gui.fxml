@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.canvas.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.input.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane fx:id="anchorPane" onKeyPressed="#hotkeys" prefHeight="695.0" prefWidth="1281.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cgvsu.GuiController">
+    <MenuBar>
+        <Menu mnemonicParsing="false" text="File">
+            <MenuItem mnemonicParsing="false" onAction="#onOpenLoadModelMenuItemClick" text="Load Model">
+                <accelerator>
+                    <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                </accelerator>
+            </MenuItem>
+            <MenuItem mnemonicParsing="false" onAction="#onOpenLoadTextureMenuItemClick" text="Load Texture">
+                <accelerator>
+                    <KeyCodeCombination alt="UP" code="W" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                </accelerator>
+            </MenuItem>
+            <MenuItem mnemonicParsing="false" onAction="#openSaveSelection" text="Save Model">
+                <accelerator>
+                    <KeyCodeCombination alt="UP" code="D" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                </accelerator></MenuItem>
+            <MenuItem mnemonicParsing="false" onAction="#onAddCameraMenuItemClick" text="Add camera">
+                <accelerator>
+                    <KeyCodeCombination alt="UP" code="A" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                </accelerator></MenuItem>
+        </Menu>
+        <Menu mnemonicParsing="false" text="Camera Options">
+            <MenuItem mnemonicParsing="false" onAction="#handleCameraForward" text="Forward" visible="false">
+                <accelerator>
+                    <KeyCodeCombination alt="UP" code="UP" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                </accelerator>
+            </MenuItem>
+            <MenuItem mnemonicParsing="false" onAction="#handleCameraBackward" text="Backward" visible="false">
+                <accelerator>
+                    <KeyCodeCombination alt="UP" code="DOWN" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                </accelerator>
+            </MenuItem>
+            <MenuItem mnemonicParsing="false" onAction="#handleCameraLeft" text="Left" visible="false">
+                <accelerator>
+                    <KeyCodeCombination alt="UP" code="LEFT" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                </accelerator>
+            </MenuItem>
+            <MenuItem mnemonicParsing="false" onAction="#handleCameraRight" text="Right" visible="false">
+                <accelerator>
+                    <KeyCodeCombination alt="UP" code="RIGHT" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                </accelerator>
+            </MenuItem>
+            <MenuItem mnemonicParsing="false" onAction="#handleCameraUp" text="Up" visible="false">
+                <accelerator>
+                    <KeyCodeCombination alt="UP" code="W" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                </accelerator>
+            </MenuItem>
+            <MenuItem mnemonicParsing="false" onAction="#handleCameraDown" text="Down" visible="false">
+                <accelerator>
+                    <KeyCodeCombination alt="UP" code="S" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                </accelerator>
+            </MenuItem>
+            <MenuItem mnemonicParsing="false" text="Translation">
+                <graphic>
+                    <Slider fx:id="transSlider" max="4.0" prefHeight="14.0" prefWidth="71.0" showTickLabels="true" value="1.5" />
+                </graphic>
+            </MenuItem>
+            <MenuItem mnemonicParsing="false" text="FOV">
+                <graphic>
+                    <Slider fx:id="fovSlider" max="2.0" min="0.01" prefHeight="14.0" prefWidth="71.0" showTickLabels="true" value="1.0" />
+                </graphic>
+            </MenuItem>
+            <MenuItem mnemonicParsing="false" text="Aspect ratio">
+                <graphic>
+                    <Slider fx:id="aspectSlider" max="4.0" min="0.01" prefHeight="14.0" prefWidth="71.0" showTickLabels="true" value="0.5" />
+                </graphic>
+            </MenuItem>
+            <MenuItem mnemonicParsing="false" text="Rotate speed">
+                <graphic>
+                    <Slider fx:id="rotateSpeed" max="0.5" prefHeight="14.0" prefWidth="71.0" showTickLabels="true" value="0.05" />
+                </graphic>
+            </MenuItem>
+        </Menu>
+    </MenuBar>
+
+    <Canvas fx:id="canvas" focusTraversable="true" height="695.0" layoutX="1.0" layoutY="25.0" width="1280.0" />
+    <AnchorPane fx:id="modelTrans" layoutX="996.0" prefHeight="520.0" prefWidth="285.0">
+        <children>
+            <TextField fx:id="rotateX" focusTraversable="false" layoutX="130.0" layoutY="65.0" prefHeight="26.0" prefWidth="122.0" text="0" />
+            <TextField fx:id="rotateY" focusTraversable="false" layoutX="130.0" layoutY="130.0" prefHeight="26.0" prefWidth="122.0" text="0" />
+            <TextField fx:id="rotateZ" focusTraversable="false" layoutX="130.0" layoutY="195.0" prefHeight="26.0" prefWidth="122.0" text="0" />
+            <TextField fx:id="scaleX" focusTraversable="false" layoutX="130.0" layoutY="285.0" prefHeight="26.0" prefWidth="100.0" text="1" />
+            <TextField fx:id="scaleY" focusTraversable="false" layoutX="130.0" layoutY="320.0" prefHeight="26.0" prefWidth="100.0" text="1" />
+            <TextField fx:id="scaleZ" focusTraversable="false" layoutX="130.0" layoutY="355.0" prefHeight="26.0" prefWidth="100.0" text="1" />
+            <TextField fx:id="translateX" focusTraversable="false" layoutX="130.0" layoutY="415.0" prefHeight="26.0" prefWidth="100.0" text="0" />
+            <TextField fx:id="translateY" focusTraversable="false" layoutX="130.0" layoutY="450.0" prefHeight="26.0" prefWidth="100.0" text="0" />
+            <TextField fx:id="translateZ" focusTraversable="false" layoutX="130.0" layoutY="485.0" prefHeight="26.0" prefWidth="100.0" text="0" />
+            <Slider layoutX="130.0" layoutY="92.0" majorTickUnit="120.0" max="360.0" min="-360.0" prefHeight="38.0" prefWidth="122.0" showTickLabels="true" showTickMarks="true" fx:id="xSlider" />
+            <Slider fx:id="ySlider" layoutX="130.0" layoutY="157.0" majorTickUnit="120.0" max="360.0" min="-360.0" prefHeight="24.0" prefWidth="122.0" showTickLabels="true" showTickMarks="true" />
+            <Slider fx:id="zSlider" layoutX="130.0" layoutY="222.0" majorTickUnit="120.0" max="360.0" min="-360.0" prefHeight="24.0" prefWidth="122.0" showTickLabels="true" showTickMarks="true" />
+            <Label layoutX="45.0" layoutY="40.0" prefHeight="26.0" prefWidth="82.0" text="Rotate:">
+                <font>
+                    <Font size="15.0" />
+                </font></Label>
+            <Label layoutX="45.0" layoutY="260.0" prefHeight="26.0" prefWidth="47.0" text="Scale:">
+                <font>
+                    <Font size="15.0" />
+                </font></Label>
+            <Label layoutX="45.0" layoutY="390.0" prefHeight="26.0" prefWidth="82.0" text="Translate:">
+                <font>
+                    <Font size="15.0" />
+                </font></Label>
+            <Label layoutX="100.0" layoutY="415.0" prefHeight="26.0" prefWidth="32.0" text="X:">
+                <font>
+                    <Font size="15.0" />
+                </font></Label>
+            <Label layoutX="100.0" layoutY="450.0" prefHeight="26.0" prefWidth="32.0" text="Y:">
+                <font>
+                    <Font size="15.0" />
+                </font></Label>
+            <Label layoutX="100.0" layoutY="485.0" prefHeight="26.0" prefWidth="32.0" text="Z:">
+                <font>
+                    <Font size="15.0" />
+                </font></Label>
+            <Label layoutX="100.0" layoutY="65.0" prefHeight="26.0" prefWidth="32.0" text="X:">
+                <font>
+                    <Font size="15.0" />
+                </font>
+            </Label>
+            <Label layoutX="100.0" layoutY="285.0" prefHeight="26.0" prefWidth="32.0" text="X:">
+                <font>
+                    <Font size="15.0" />
+                </font>
+            </Label>
+            <Label layoutX="100.0" layoutY="320.0" prefHeight="26.0" prefWidth="32.0" text="Y:">
+                <font>
+                    <Font size="15.0" />
+                </font>
+            </Label>
+            <Label layoutX="100.0" layoutY="130.0" prefHeight="26.0" prefWidth="32.0" text="Y:">
+                <font>
+                    <Font size="15.0" />
+                </font>
+            </Label>
+            <Label layoutX="100.0" layoutY="195.0" prefHeight="26.0" prefWidth="32.0" text="Z:">
+                <font>
+                    <Font size="15.0" />
+                </font>
+            </Label>
+            <Label layoutX="100.0" layoutY="355.0" prefHeight="26.0" prefWidth="32.0" text="Z:">
+                <font>
+                    <Font size="15.0" />
+                </font>
+            </Label>
+            <Label layoutX="100.0" layoutY="5.0" prefHeight="38.0" prefWidth="122.0" text="Model Transform">
+                <font>
+                    <Font size="15.0" />
+                </font>
+            </Label>
+            <Rectangle fx:id="rightUpRect" arcHeight="5.0" arcWidth="5.0" fill="#2197ff21" height="520.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
+            <Text fx:id="rightUpText" layoutX="8.0" layoutY="210.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Transform" wrappingWidth="7.200036621093716">
+                <font>
+                    <Font size="15.0" />
+                </font>
+            </Text>
+        </children>
+    </AnchorPane>
+    <MenuBar layoutX="156.0" prefHeight="25.0" prefWidth="71.0">
+        <menus>
+            <Menu mnemonicParsing="false" text="Theme">
+                <items>
+                    <RadioMenuItem fx:id="light" mnemonicParsing="false" onAction="#lightTheme" selected="true" text="Bright" />
+                    <RadioMenuItem fx:id="dark" mnemonicParsing="false" onAction="#darkTheme" text="Dark" />
+                </items>
+            </Menu>
+        </menus>
+    </MenuBar>
+    <AnchorPane fx:id="loadedModels" layoutX="-1.0" layoutY="28.0" prefHeight="238.0" prefWidth="260.0">
+        <children>
+            <ListView fx:id="listViewModels" focusTraversable="false" layoutY="34.0" onMouseClicked="#modelSelected" prefHeight="203.0" prefWidth="236.0" />
+            <Label alignment="CENTER" layoutX="49.0" layoutY="2.0" prefHeight="30.0" prefWidth="135.0" text="Loaded models">
+                <font>
+                    <Font size="19.0" />
+                </font>
+            </Label>
+            <Rectangle fx:id="leftUpRect" arcHeight="5.0" arcWidth="5.0" fill="#61d42421" height="238.0" layoutX="236.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
+            <Text fx:id="leftUpText" layoutX="244.0" layoutY="74.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Models" wrappingWidth="7.200036621093659">
+                <font>
+                    <Font size="15.0" />
+                </font>
+            </Text>
+        </children>
+    </AnchorPane>
+    <AnchorPane fx:id="saveSelection" layoutX="414.0" layoutY="237.0" prefHeight="222.0" prefWidth="471.0" visible="false">
+        <children>
+            <Button layoutX="39.0" layoutY="150.0" mnemonicParsing="false" onAction="#onOpenSaveWithChangesModel" text="Save with changes">
+                <font>
+                    <Font size="18.0" />
+                </font>
+            </Button>
+            <Button layoutX="276.0" layoutY="150.0" mnemonicParsing="false" onAction="#onOpenSaveUnchangedModel" text="Keep unchanged">
+                <font>
+                    <Font size="18.0" />
+                </font>
+            </Button>
+            <Button layoutX="423.0" layoutY="1.0" mnemonicParsing="false" onAction="#closeSaveSelection" prefHeight="26.0" prefWidth="47.0" style="-fx-background-color: red;" text="✖" />
+            <Label layoutX="85.0" layoutY="51.0" prefHeight="38.0" prefWidth="301.0" text="How do you want to save the model?">
+                <font>
+                    <Font size="18.0" />
+                </font></Label>
+        </children>
+    </AnchorPane>
+    <AnchorPane fx:id="renderingModels" layoutX="996.0" layoutY="525.0" prefHeight="196.0" prefWidth="285.0">
+        <children>
+            <CheckBox fx:id="drawPolygonMesh" focusTraversable="false" layoutX="46.0" layoutY="30.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="125.0" selected="true" text="Polygon mesh">
+                <font>
+                    <Font size="15.0" />
+                </font></CheckBox>
+            <CheckBox fx:id="drawLighting" focusTraversable="false" layoutX="46.0" layoutY="105.0" mnemonicParsing="false" text="Lighting">
+                <font>
+                    <Font size="15.0" />
+                </font></CheckBox>
+            <CheckBox fx:id="drawTextures" focusTraversable="false" layoutX="46.0" layoutY="80.0" mnemonicParsing="false" text="Textures">
+                <font>
+                    <Font size="15.0" />
+                </font></CheckBox>
+            <Label focusTraversable="false" layoutX="89.0" layoutY="4.0" prefHeight="26.0" prefWidth="122.0" text="Rendering modes:">
+                <font>
+                    <Font size="15.0" />
+                </font>
+            </Label>
+            <ColorPicker fx:id="polygonFillColor" focusTraversable="false" layoutX="47.0" layoutY="160.0">
+                <value>
+                    <Color red="0.4000000059604645" green="0.501960813999176" blue="0.9019607901573181" />
+                </value></ColorPicker>
+            <Rectangle fx:id="rightDownRect" arcHeight="5.0" arcWidth="5.0" fill="#61d42421" height="196.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
+            <Text fx:id="rightDownText" layoutX="7.0" layoutY="66.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Modes" wrappingWidth="7.200036621093659">
+                <font>
+                    <Font size="15.0" />
+                </font>
+            </Text>
+            <CheckBox fx:id="drawFilling" focusTraversable="false" layoutX="46.0" layoutY="55.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="125.0" text="Fill">
+                <font>
+                    <Font size="15.0" />
+                </font>
+            </CheckBox>
+         <CheckBox fx:id="hitboxWriting" focusTraversable="false" layoutX="46.0" layoutY="130.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="125.0" selected="true" text="Hitbox">
+            <font>
+               <Font size="15.0" />
+            </font>
+         </CheckBox>
+        </children>
+    </AnchorPane>
+    <AnchorPane fx:id="loadedTextures" layoutX="-1.0" layoutY="485.0" prefHeight="229.0" prefWidth="260.0">
+        <children>
+            <ListView fx:id="listViewTextures" focusTraversable="false" layoutY="34.0" onMouseClicked="#textureSelected" prefHeight="201.0" prefWidth="236.0" />
+            <Label alignment="CENTER" layoutX="49.0" layoutY="2.0" prefHeight="30.0" prefWidth="135.0" text="Loaded textures">
+                <font>
+                    <Font size="19.0" />
+                </font>
+            </Label>
+            <Rectangle fx:id="leftDownRect" arcHeight="5.0" arcWidth="5.0" fill="#2197ff21" height="235.0" layoutX="236.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
+            <Text fx:id="leftDownText" layoutX="245.0" layoutY="42.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Textures" wrappingWidth="7.200036621093659">
+                <font>
+                    <Font size="15.0" />
+                </font>
+            </Text>
+        </children>
+    </AnchorPane>
+    <AnchorPane fx:id="enterModelName" layoutX="478.0" layoutY="261.0" prefHeight="222.0" prefWidth="308.0" visible="false">
+        <children>
+            <Button layoutX="139.0" layoutY="153.0" mnemonicParsing="false" onAction="#okGigaModelPane" text="OK">
+                <font>
+                    <Font size="18.0" />
+                </font>
+            </Button>
+            <Button layoutX="263.0" layoutY="1.0" mnemonicParsing="false" onAction="#closeEnterFileName" prefHeight="26.0" prefWidth="47.0" style="-fx-background-color: red;" text="✖" />
+            <Label layoutX="57.0" layoutY="41.0" prefHeight="38.0" prefWidth="211.0" text="Please enter model name.">
+                <font>
+                    <Font size="18.0" />
+                </font>
+            </Label>
+            <TextField fx:id="modelName" layoutX="52.0" layoutY="89.0" prefHeight="26.0" prefWidth="222.0">
+                <font>
+                    <Font size="20.0" />
+                </font>
+            </TextField>
+        </children>
+    </AnchorPane>
+    <MenuBar layoutX="227.0" layoutY="-1.0" prefHeight="26.0" prefWidth="130.0">
+        <menus>
+            <Menu mnemonicParsing="false" text="Camera Transform">
+                <items>
+                    <MenuItem mnemonicParsing="false" text="Rotate on X">
+                        <graphic>
+                            <Slider prefHeight="14.0" prefWidth="71.0" />
+                        </graphic>
+                    </MenuItem>
+                    <MenuItem mnemonicParsing="false" text="Rotate on Y">
+                        <graphic>
+                            <Slider prefHeight="14.0" prefWidth="71.0" />
+                        </graphic>
+                    </MenuItem>
+                </items>
+            </Menu>
+        </menus>
+    </MenuBar>
+    <AnchorPane fx:id="loadedCameras" layoutX="-1.0" layoutY="275.0" prefHeight="196.0" prefWidth="260.0">
+        <children>
+            <ListView fx:id="listViewCameras" focusTraversable="false" layoutY="34.0" onMouseClicked="#cameraSelected" prefHeight="166.0" prefWidth="236.0" />
+            <Label alignment="CENTER" layoutX="46.0" layoutY="2.0" prefHeight="30.0" prefWidth="144.0" text="Added cameras">
+                <font>
+                    <Font size="19.0" />
+                </font>
+            </Label>
+            <Rectangle fx:id="leftMediumRect" arcHeight="5.0" arcWidth="5.0" fill="#ffdd1f4d" height="201.0" layoutX="236.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
+            <Text fx:id="leftMediumText" layoutX="244.0" layoutY="50.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Cameras" wrappingWidth="7.200036621093659">
+                <font>
+                    <Font size="15.0" />
+                </font>
+            </Text>
+        </children>
+    </AnchorPane>
+    <AnchorPane fx:id="enterCameraData" layoutX="440.0" layoutY="267.0" prefHeight="212.0" prefWidth="418.0" visible="false">
+        <children>
+            <Label alignment="CENTER" contentDisplay="TOP" layoutX="115.0" layoutY="20.0" prefHeight="38.0" prefWidth="195.0" text="Enter camera data. ">
+                <font>
+                    <Font size="20.0" />
+                </font>
+            </Label>
+            <TextField fx:id="cameraName" layoutX="40.0" layoutY="128.0" />
+            <TextField fx:id="cameraX" layoutX="235.0" layoutY="127.0" prefHeight="26.0" prefWidth="39.0" />
+            <Label layoutX="65.0" layoutY="93.0" prefHeight="30.0" prefWidth="100.0" text="Camera name">
+                <font>
+                    <Font size="15.0" />
+                </font>
+            </Label>
+            <Label layoutX="250.0" layoutY="99.0" text="X">
+                <font>
+                    <Font size="15.0" />
+                </font>
+            </Label>
+            <TextField fx:id="cameraZ" layoutX="358.0" layoutY="127.0" prefHeight="26.0" prefWidth="39.0" />
+            <TextField fx:id="cameraY" layoutX="296.0" layoutY="127.0" prefHeight="26.0" prefWidth="39.0" />
+            <Label layoutX="377.0" layoutY="99.0" prefHeight="18.0" prefWidth="7.0" text="Z">
+                <font>
+                    <Font size="15.0" />
+                </font>
+            </Label>
+            <Label layoutX="311.0" layoutY="99.0" text="Y">
+                <font>
+                    <Font size="15.0" />
+                </font>
+            </Label>
+            <Button layoutX="370.0" layoutY="1.0" mnemonicParsing="false" onAction="#closeCameraPane" prefHeight="26.0" prefWidth="47.0" style="-fx-background-color: red;" text="✖" />
+            <Button layoutX="189.0" layoutY="173.0" mnemonicParsing="false" onAction="#okCameraPane" prefHeight="38.0" prefWidth="47.0" text="OK">
+                <font>
+                    <Font size="15.0" />
+                </font>
+            </Button>
+        </children>
+    </AnchorPane>
+</AnchorPane>
